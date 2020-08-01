@@ -1,4 +1,2 @@
 @import "./assets/fonts/iconfont.wxss";
-.time{
-    color: red!important;
-}
+

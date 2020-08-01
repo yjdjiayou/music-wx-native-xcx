@@ -59,23 +59,25 @@ Component({
          * @param event
          */
         onChange(event) {
-            // 拖动
             if (event.detail.source === 'touch') {
+                // console.log('onChange');
                 const {_movableAreaWidth, _movableViewWidth,} = this.data;
                 // 这里不能用 setData 去触发更新，会消耗性能
                 this.data.progress = event.detail.x / (_movableAreaWidth - _movableViewWidth) * 100;
                 this.data.movableDis = event.detail.x;
-
-                // isMoving = true;
                 this.setData({
                     _isMoving: true
-                })
+                });
             }
         },
         /**
          * 滑块停止拖拽事件
          */
         onTouchEnd() {
+            // 这里有个坑：当 onEnded 触发完成时，有时会再触发一次 onChange 事件
+            // 而在 onChange 里又设置了 _isMoving 为 true ，会导致 onTimeUpdate 触发时，不会执行下面的逻辑（因为 if(_isMoving)return;}）
+            // 解决方案：每次 onPlay 触发时都设置 _isMoving 为 false
+            // console.log("onTouchEnd");
             const {_curMusicDuration, progress, movableDis} = this.data;
             const currentTimeFmt = this._dateFormat(Math.floor(bgAudioManager.currentTime));
 
@@ -87,7 +89,6 @@ Component({
             });
 
             bgAudioManager.seek(_curMusicDuration * progress / 100);
-            // isMoving = false;
         },
 
         /**
@@ -107,8 +108,6 @@ Component({
                     _movableAreaWidth: rect[0].width,
                     _movableViewWidth: rect[1].width
                 });
-                // movableAreaWidth = rect[0].width;
-                // movableViewWidth = rect[1].width;
             })
 
         },
@@ -121,7 +120,6 @@ Component({
             // 播放事件
             bgAudioManager.onPlay(() => {
                 // console.log('onPlay');
-                // isMoving = false;
                 this.setData({
                     _isMoving: false
                 });
@@ -188,8 +186,8 @@ Component({
                     ['showTime.currentTime']: `${currentTimeFmt.min}:${currentTimeFmt.sec}`,
                     _currentSec: sec
                 });
-                // currentSec = sec;
-                // 联动歌词
+
+                // 播放进度改变时，需要联动歌词
                 this.triggerEvent('timeUpdate', {
                     currentTime
                 });
@@ -197,7 +195,6 @@ Component({
 
             // 播放结束事件
             bgAudioManager.onEnded(() => {
-                // console.log("onEnded");
                 this.triggerEvent('musicEnd');
             });
 
@@ -210,6 +207,7 @@ Component({
                 });
             })
         },
+
         /**
          * 设置时间
          * @private

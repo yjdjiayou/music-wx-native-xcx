@@ -45,6 +45,7 @@ exports.main = async (event, context) => {
         ctx.body = result.data;
     });
 
+    // 获取音乐的歌词数据
     app.router('lyric', async (ctx, next) => {
         const URL = `${BASE_URL}/lyric?id=${event.musicId}`;
         const result = await axios.request(URL);
