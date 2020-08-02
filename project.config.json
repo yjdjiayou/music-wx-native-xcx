@@ -3,7 +3,7 @@
 	"cloudfunctionRoot": "cloudfunctions/",
 	"setting": {
 		"urlCheck": false,
-		"es6": false,
+		"es6": true,
 		"enhance": false,
 		"postcss": false,
 		"preloadBackgroundData": false,
@@ -49,18 +49,19 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 0,
+			"current": -1,
 			"list": [
-				{
-					"id": -1,
-					"name": "db guide",
-					"pathName": "pages/databaseGuide/databaseGuide",
-					"query": ""
-				},
 				{
 					"id": 1,
 					"name": "pages/music-list/musicList",
 					"pathName": "pages/music-list/musicList",
+					"query": "playlistId=4901236503",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/blog/blog",
+					"pathName": "pages/blog/blog",
 					"query": "playlistId=4901236503",
 					"scene": null
 				}

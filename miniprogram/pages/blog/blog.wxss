@@ -1,1 +1,42 @@
 /* pages/blog/blog.wxss */
+.header {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 99;
+
+    width: 100%;
+    padding: 0 20rpx;
+    height: 100rpx;
+    background-color: #fff;
+}
+
+.header .icon-fabu {
+    font-size: 48rpx;
+}
+
+.publish-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 68rpx;
+    height: 68rpx;
+}
+
+.search-container {
+    flex: 1;
+}
+
+.blog-list {
+    margin-top: 120rpx;
+}
+
+.blog-panel {
+    box-sizing: border-box;
+    margin-bottom: 20rpx;
+}
