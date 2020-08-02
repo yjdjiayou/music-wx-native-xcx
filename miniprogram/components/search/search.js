@@ -12,7 +12,7 @@ Component({
     properties: {
         placeholder: {
             type: String,
-            value: '请输入关键字'
+            value: '请输入关键字'
         }
     },
     /**

@@ -6,7 +6,7 @@
 
     <view class="image-list">
         <!-- 显示图片 -->
-        <block wx:for="{{images}}" wx:key="*this">
+        <block wx:for="{{selectedImageList}}" wx:key="*this">
             <view class="image-wrap">
                 <image class="image" src="{{item}}" mode="aspectFill" bind:tap="onPreviewImage"
                        data-imgsrc="{{item}}"></image>
@@ -15,7 +15,7 @@
         </block>
 
         <!-- 选择图片 -->
-        <view class="image-wrap select-photo" hidden="{{!selectPhoto}}" bind:tap="onChooseImage">
+        <view class="image-wrap select-photo" hidden="{{!selectPhotoVisible}}" bind:tap="onChooseImage">
             <i class="iconfont icon-jiahao"></i>
         </view>
 
@@ -24,5 +24,5 @@
 
 <view class="footer" style="bottom:{{footerBottom}}px">
     <text class="words-num">{{wordsNum}}</text>
-    <button class="send-btn" bind:tap="send">发布</button>
+    <button class="send-btn" bind:tap="onPublish">发布</button>
 </view>
