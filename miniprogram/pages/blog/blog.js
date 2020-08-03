@@ -87,7 +87,11 @@ Page({
         this._loadBlogList(0);
     },
 
-    goComment(event) {
+    /**
+     * 跳转到评论页面
+     * @param event
+     */
+    goToComment(event) {
         wx.navigateTo({
             url: '../../pages/blog-comment/blog-comment?blogId=' + event.target.dataset.blogid,
         })

@@ -10,6 +10,7 @@ const TcbRouter = require('tcb-router');
 const db = cloud.database();
 
 const blogCollection = db.collection('blog');
+const blogCommentCollection = db.collection('blog-comment');
 
 const MAX_LIMIT = 100;
 
@@ -19,9 +20,13 @@ exports.main = async (event, context) => {
         event
     });
 
+    /**
+     * 查询获取博客列表
+     */
     app.router('list', async (ctx, next) => {
         const keyword = event.keyword;
         let w = {};
+        // 如果 keyword 有值，说明需要模糊搜索
         if (keyword.trim() !== '') {
             w = {
                 content: new db.RegExp({
@@ -30,17 +35,18 @@ exports.main = async (event, context) => {
                 })
             }
         }
-        let blogList = await blogCollection.where(w).skip(event.start).limit(event.count)
-            .orderBy('createTime', 'desc').get().then((res) => {
-                return res.data
-            });
-        ctx.body = blogList
+        let result = await blogCollection
+            .where(w)
+            .skip(event.start)
+            .limit(event.count)
+            .orderBy('createTime', 'desc')
+            .get();
+        ctx.body = result.data;
     });
 
-
-
-
-
+    /**
+     * 查询博客详情
+     */
     app.router('detail', async (ctx, next) => {
         let blogId = event.blogId;
         // 详情查询
@@ -82,8 +88,22 @@ exports.main = async (event, context) => {
 
     });
 
-
-
+    /**
+     * 添加评论
+     */
+    app.use('addComment', async (ctx, next) => {
+        const {blogId, content, nickName, avatarUrl} = event;
+        const result = await blogCommentCollection.add({
+            data: {
+                content,
+                blogId,
+                nickName,
+                avatarUrl,
+                createTime: db.serverDate(),
+            }
+        });
+        ctx.body = result._id;
+    });
 
 
     const wxContext = cloud.getWXContext();
@@ -97,7 +117,5 @@ exports.main = async (event, context) => {
     });
 
 
-
-
-    return app.serve()
+    return app.serve();
 };

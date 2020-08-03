@@ -11,7 +11,8 @@ cloud.init({
     env: cloud.DYNAMIC_CURRENT_ENV
 });
 
-const URL = 'http://musicapi.xiecheng.live/personalized';
+// const URL = 'http://musicapi.xiecheng.live/personalized';
+const URL = 'http://localhost:4000/personalized';
 
 // 获取数据库的引用
 const db = cloud.database();

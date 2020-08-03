@@ -196,7 +196,7 @@ Page({
     saveToDatabase(fileIds) {
         const {_content, _userInfo} = this.data;
         // 这里只是展示了可以在小程序端调用数据库的 API
-        // 理论上来说，应该把这部分逻辑放到 云函数中，减少耦合性
+        // 理论上来说，应该把这部分逻辑放到 云函数中，小程序端只需要调用云函数，以此降低耦合性
         return db.collection('blog').add({
             data: {
                 ..._userInfo,
