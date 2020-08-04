@@ -111,7 +111,7 @@ Component({
                 title: '评论成功',
             });
 
-            // 推送模板消息
+            // 推送模板消息（只有真机调试或者云函数调试才能起作用，开发者工具不支持，会报错）
             wx.cloud.callFunction({
                 name: 'sendMessage',
                 data: {

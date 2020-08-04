@@ -1,5 +1,6 @@
 // 云函数入口文件
 const cloud = require('wx-server-sdk');
+const getDataByPagingQuery = require('../utils/paging-query');
 
 cloud.init({
     env: cloud.DYNAMIC_CURRENT_ENV
@@ -48,42 +49,21 @@ exports.main = async (event, context) => {
      * 查询博客详情
      */
     app.router('detail', async (ctx, next) => {
+        // 因为博客详情数据和评论列表是分两个集合存储的，所以这里需要查询两次
         let blogId = event.blogId;
-        // 详情查询
+        // 获取博客详情数据
         let detail = await blogCollection.where({
             _id: blogId
         }).get().then((res) => {
             return res.data
         });
-        // 评论查询
-        const countResult = await blogCollection.count();
-        const total = countResult.total;
-        let commentList = {
-            data: []
-        };
-        if (total > 0) {
-            const batchTimes = Math.ceil(total / MAX_LIMIT);
-            const tasks = [];
-            for (let i = 0; i < batchTimes; i++) {
-                let promise = db.collection('blog-comment').skip(i * MAX_LIMIT)
-                    .limit(MAX_LIMIT).where({
-                        blogId
-                    }).orderBy('createTime', 'desc').get();
-                tasks.push(promise)
-            }
-            if (tasks.length > 0) {
-                commentList = (await Promise.all(tasks)).reduce((acc, cur) => {
-                    return {
-                        data: acc.data.concat(cur.data)
-                    }
-                })
-            }
 
-        }
+        // 获取评论列表
+        let commentListFromDatabase = await getDataByPagingQuery(blogCommentCollection, MAX_LIMIT);
 
         ctx.body = {
-            commentList,
             detail,
+            commentList:commentListFromDatabase,
         }
 
     });
@@ -110,8 +90,12 @@ exports.main = async (event, context) => {
     app.router('getListByOpenid', async (ctx, next) => {
         ctx.body = await blogCollection.where({
             _openid: wxContext.OPENID
-        }).skip(event.start).limit(event.count)
-            .orderBy('createTime', 'desc').get().then((res) => {
+        })
+            .skip(event.start)
+            .limit(event.count)
+            .orderBy('createTime', 'desc')
+            .get()
+            .then((res) => {
                 return res.data
             })
     });

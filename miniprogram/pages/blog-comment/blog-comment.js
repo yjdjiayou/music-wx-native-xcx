@@ -38,8 +38,9 @@ Page({
                 $url: 'detail',
             }
         });
+        const result = res.result;
 
-        let commentList = res.result.commentList.data;
+        let commentList = result.commentList.data;
         commentList.forEach((it,i)=>{
             // 格式化时间
             it.createTime = formatTime(new Date(it.createTime));
@@ -47,7 +48,7 @@ Page({
 
         this.setData({
             commentList,
-            blog: res.result.detail[0],
+            blog: result.detail[0],
         });
 
         wx.hideLoading();
