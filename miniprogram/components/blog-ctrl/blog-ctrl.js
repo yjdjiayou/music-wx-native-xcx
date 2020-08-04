@@ -1,4 +1,5 @@
 // components/blog-ctrl/blog-ctrl.js
+const subscribeMsgTemplate = require('../../config/subscribe-message-template.js');
 Component({
 
     options: {
@@ -75,8 +76,8 @@ Component({
         async onSend(event) {
             const {_userInfo} = this.data;
             const {blogId} = this.properties;
-            let formId = event.detail.formId;
             let content = event.detail.value.content;
+
             if (content.trim() === '') {
                 wx.showModal({
                     title: '评论内容不能为空',
@@ -85,11 +86,16 @@ Component({
                 return;
             }
 
+            // 调起客户端小程序订阅消息界面（默认情况下，每次调用都会调起订阅消息界面）
+            // 当用户勾选了订阅面板中的“总是保持以上选择，不再询问”时，不再调起订阅消息界面
+            await wx.requestSubscribeMessage({
+                tmplIds: [subscribeMsgTemplate.commentCompleteTemplateID]
+            });
+
             wx.showLoading({
                 title: '评论中',
                 mask: true,
             });
-
             await wx.cloud.callFunction({
                 name: 'blog',
                 data: {
@@ -104,25 +110,24 @@ Component({
             wx.showToast({
                 title: '评论成功',
             });
-            this.setData({
-                modalShow: false,
-                content: '',
-            });
-            // 父元素刷新评论页面
-            this.triggerEvent('refreshCommentList');
 
             // 推送模板消息
             wx.cloud.callFunction({
                 name: 'sendMessage',
                 data: {
                     content,
-                    formId,
                     blogId
                 }
-            }).then((res) => {
-                console.log(res)
             });
+
+            this.setData({
+                modalShow: false,
+                content: '',
+            });
+            // 刷新评论页面
+            this.triggerEvent('refreshCommentList');
         },
 
     }
 });
+
