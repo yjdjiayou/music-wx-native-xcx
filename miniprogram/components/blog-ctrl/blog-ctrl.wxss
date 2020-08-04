@@ -1,35 +1,60 @@
 .ctrl {
     display: flex;
     align-items: center;
-    background: #fff;
+    justify-content: center;
     height: 100%;
+    background: #fff;
 }
-
 .ctrl-item {
     flex: 1;
     text-align: center;
-    color: rgba(40, 47, 60, 0.8);
-    font-size: 26rpx;
     height: 60rpx;
+    color: rgba(40, 47, 60, 0.8);
+}
+.ctrl-item .icon {
+    position: relative;
+    margin-top: 6px;
+    margin-right: 12rpx;
+    font-size: 32rpx;
+}
+.ctrl-item .txt {
+    font-size: 32rpx;
+}
+
+.comment-container {
     display: flex;
-    flex-direction: row;
     align-items: center;
     justify-content: center;
 }
 
-.ctrl-item .icon {
-    margin-right: 12rpx;
-    font-size: 32rpx;
+.share-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    padding: 0;
+    height: 100%;
+    background-color: #fff;
+    color: rgba(40, 47, 60, 0.8);
 }
 
-.ctrl-item text {
-    font-size: 32rpx;
+.share-btn::after {
+    display: none;
 }
+
+.share-hover::after {
+    border: 0;
+}
+
+.share-btn .icon{
+    margin-top: 4px;
+}
+
 
 .comment-content {
+    padding: 20rpx;
     width: 560rpx;
     text-align: left;
-    padding: 20rpx;
     font-size: 32rpx;
 }
 
@@ -44,24 +69,4 @@
     background: #d43c33;
     color: #fff;
     font-size: 24rpx;
-}
-
-.share-btn {
-    background-color: #fff;
-    color: rgba(40, 47, 60, 0.8);
-    padding: 0;
-    height: 100%;
-    border: none;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-}
-
-.share-btn::after {
-    display: none;
-}
-
-.share-hover::after {
-    border: 0;
 }

@@ -1,13 +1,13 @@
 <view class="ctrl">
-    <view class="ctrl-item" bind:tap="onComment">
+    <view class="ctrl-item comment-container" bind:tap="onComment">
         <i class="iconfont icon-pinglun icon"></i>
-        <text>评论</text>
+        <text class="txt">评论</text>
     </view>
-    <view class="ctrl-item share">
+    <view class="ctrl-item share-container">
         <button open-type="share" data-blogid="{{blogId}}" data-blog="{{blog}}" class="share-btn"
                 hover-class="share-hover">
             <i class="iconfont icon-fenxiang icon"></i>
-            <text>分享</text>
+            <text class="txt">分享</text>
         </button>
     </view>
 </view>
