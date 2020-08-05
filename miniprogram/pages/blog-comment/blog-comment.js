@@ -39,8 +39,7 @@ Page({
             }
         });
         const result = res.result;
-
-        let commentList = result.commentList.data;
+        let commentList = result.commentList || [];
         commentList.forEach((it,i)=>{
             // 格式化时间
             it.createTime = formatTime(new Date(it.createTime));

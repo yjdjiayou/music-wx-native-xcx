@@ -5,6 +5,7 @@ const cloud = require('wx-server-sdk');
 const TcbRouter = require('tcb-router');
 const axios = require('axios');
 
+// const BASE_URL = 'http://localhost:4000/';
 const BASE_URL = 'http://musicapi.xiecheng.live';
 
 cloud.init({

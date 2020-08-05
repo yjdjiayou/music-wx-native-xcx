@@ -1,6 +1,9 @@
 // 云函数入口文件
 const cloud = require('wx-server-sdk');
-const getDataByPagingQuery = require('../utils/paging-query');
+// const path = require("path");
+// 云函数中好像不能建立公共资源目录，最终上传后都会报错
+// const getDataByPagingQuery = require( '../utils/paging-query.js');
+
 
 cloud.init({
     env: cloud.DYNAMIC_CURRENT_ENV
@@ -13,10 +16,41 @@ const db = cloud.database();
 const blogCollection = db.collection('blog');
 const blogCommentCollection = db.collection('blog-comment');
 
-const MAX_LIMIT = 100;
+const MAX_LIMIT = 1000;
+
+async function getDataByPagingQuery(collection, maxLimit = 1000) {
+    // 默认情况下，获取到的数据是有限制的
+    // 从云函数获取数据，只能获取到 1000 条数据
+    // 从小程序端获取数据，只能获取到 20 条数据
+    // const data = await playlistCollection.get();
+
+    // 分页查询就能解决以上问题
+    // 获取当前集合中的总数
+    const countResult = await collection.count();
+    const total = countResult.total;
+    const batchTimes = Math.ceil(total / maxLimit);
+
+    // 分成多次查询
+    const tasks = [];
+    for (let i = 0; i < batchTimes; i++) {
+        let promise = collection.skip(i * maxLimit).limit(maxLimit).get();
+        tasks.push(promise);
+    }
+
+    let list = [];
+    if (tasks.length > 0) {
+        const result = await Promise.all(tasks) || [];
+        list = result.reduce((prev, cur, i, arr) => {
+            return prev.concat(cur.data);
+        }, [])
+    }
+    return Promise.resolve(list);
+}
+
 
 // 云函数入口函数
 exports.main = async (event, context) => {
+    const wxContext = cloud.getWXContext();
     const app = new TcbRouter({
         event
     });
@@ -63,7 +97,7 @@ exports.main = async (event, context) => {
 
         ctx.body = {
             detail,
-            commentList:commentListFromDatabase,
+            commentList: commentListFromDatabase,
         }
 
     });
@@ -86,7 +120,9 @@ exports.main = async (event, context) => {
     });
 
 
-    const wxContext = cloud.getWXContext();
+    /**
+     * 通过 OPENID 查询获取博客列表
+     */
     app.router('getListByOpenid', async (ctx, next) => {
         ctx.body = await blogCollection.where({
             _openid: wxContext.OPENID

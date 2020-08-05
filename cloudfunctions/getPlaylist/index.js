@@ -1,7 +1,7 @@
 // 云函数入口文件
 const cloud = require('wx-server-sdk');
 const axios = require('axios');
-const getDataByPagingQuery = require('../utils/paging-query');
+// const getDataByPagingQuery = require('../utils/paging-query');
 
 // env 设置只会决定小程序端 API 调用的云环境，并不会决定云函数中的 API 调用的环境，在云函数中需要通过 wx-server-sdk 的 init 方法重新设置环境
 // 每个云函数之间都是相互独立的，env 设置只会决定本次云函数 API 调用的云环境，并不会决定接下来其他被调云函数中的 API 调用的环境，在编写的每个云函数中都需要通过 init 方法重新设置环境。
@@ -12,7 +12,6 @@ cloud.init({
     env: cloud.DYNAMIC_CURRENT_ENV
 });
 
-// const URL = 'http://musicapi.xiecheng.live/personalized';
 const URL = 'http://localhost:4000/personalized';
 
 // 获取数据库的引用
@@ -20,7 +19,7 @@ const db = cloud.database();
 // 获取播放列表集合的引用
 const playlistCollection = db.collection('playlist');
 // 最大查询数
-const MAX_LIMIT = 100;
+const MAX_LIMIT = 1000;
 
 /**
  * 插入播放列表数据
@@ -75,7 +74,7 @@ function removeRepeatAndMergeArr(oldPlaylist, newPlaylist) {
  */
 async function getPlaylistFromDatabase() {
     // 默认情况下，获取到的数据是有限制的
-    // 从云函数获取数据，只能获取到 100 条数据
+    // 从云函数获取数据，只能获取到 1000 条数据
     // 从小程序端获取数据，只能获取到 20 条数据
     // const data = await playlistCollection.get();
 
@@ -106,8 +105,8 @@ async function getPlaylistFromDatabase() {
 // 云函数入口函数
 exports.main = async (event, context) => {
 
-    // let playlistFromDatabase = await getPlaylistFromDatabase();
-    let playlistFromDatabase = await getDataByPagingQuery(playlistCollection, MAX_LIMIT);
+    let playlistFromDatabase = await getPlaylistFromDatabase();
+    // let playlistFromDatabase = await getDataByPagingQuery(playlistCollection, MAX_LIMIT);
 
     const result = await axios.request(URL);
     const playlistFromResult = result.data.result || [];

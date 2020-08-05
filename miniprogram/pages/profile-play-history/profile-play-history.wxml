@@ -1,1 +1,1 @@
-<x-musiclist musiclist="{{musiclist}}" />
+<x-music-list musicList="{{musicList}}" />
