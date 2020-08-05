@@ -9,15 +9,15 @@ Page({
      */
     data: {
         swiperImgUrls: [
-            {
-                url: 'http://p1.music.126.net/oeH9rlBAj3UNkhOmfog8Hw==/109951164169407335.jpg',
-            },
-            {
-                url: 'http://p1.music.126.net/xhWAaHI-SIYP8ZMzL9NOqg==/109951164167032995.jpg',
-            },
-            {
-                url: 'http://p1.music.126.net/Yo-FjrJTQ9clkDkuUCTtUg==/109951164169441928.jpg',
-            }
+            // {
+            //     imageUrl: 'http://p1.music.126.net/oeH9rlBAj3UNkhOmfog8Hw==/109951164169407335.jpg',
+            // },
+            // {
+            //     imageUrl: 'http://p1.music.126.net/xhWAaHI-SIYP8ZMzL9NOqg==/109951164167032995.jpg',
+            // },
+            // {
+            //     imageUrl: 'http://p1.music.126.net/Yo-FjrJTQ9clkDkuUCTtUg==/109951164169441928.jpg',
+            // }
         ],
         playlist: [],
     },
@@ -28,34 +28,6 @@ Page({
     onLoad: function (options) {
         this._getPlaylist();
         this._getSwiper()
-    },
-
-    /**
-     * 生命周期函数--监听页面初次渲染完成
-     */
-    onReady: function () {
-
-    },
-
-    /**
-     * 生命周期函数--监听页面显示
-     */
-    onShow: function () {
-
-    },
-
-    /**
-     * 生命周期函数--监听页面隐藏
-     */
-    onHide: function () {
-
-    },
-
-    /**
-     * 生命周期函数--监听页面卸载
-     */
-    onUnload: function () {
-
     },
 
     /**
@@ -74,13 +46,6 @@ Page({
      */
     onReachBottom: function () {
         this._getPlaylist()
-    },
-
-    /**
-     * 用户点击右上角分享
-     */
-    onShareAppMessage: function () {
-
     },
 
     /**
@@ -113,10 +78,12 @@ Page({
      * @private
      */
     _getSwiper() {
-        db.collection('swiper')
+        // 理论上，这里的数据库查询操作应该放在云函数中，小程序端只需要调用云函数就行，可以降低耦合性
+        // 这里展示小程序端也可以直调云数据库 API
+        db.collection('banner')
             .get().then((res) => {
             // 如果云数据库中数据存在，但是这里查询不到数据
-            // 有可能是 swiper 集合的权限为“仅创建者可读写”，需要更改下权限
+            // 有可能是 banner 集合的权限为“仅创建者可读写”，需要更改下权限
             this.setData({
                 swiperImgUrls: res.data
             })

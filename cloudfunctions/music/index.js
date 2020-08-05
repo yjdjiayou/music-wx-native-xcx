@@ -15,8 +15,6 @@ const db = cloud.database();
 // 获取播放列表集合的引用
 const playlistCollection = db.collection('playlist');
 
-// const BASE_URL = 'http://musicapi.xiecheng.live';
-
 // 云函数入口函数
 exports.main = async (event, context) => {
     const app = new TcbRouter({
@@ -34,7 +32,7 @@ exports.main = async (event, context) => {
 
     // 这里获取数据有两种调用方式：
     // 一种是将 NeteaseCloudMusicApi 部署到自己的服务器，然后请求该服务的地址来获取 推荐歌单列表 数据
-    // const URL = 'http://musicapi.xiecheng.live';
+    // const URL = 'http://musicapi.xxx';
     // const result = await axios.request(URL + '/personalized');
 
     // 一种是安装 NeteaseCloudMusicApi 包，使用这个包里的 api 去请求数据
