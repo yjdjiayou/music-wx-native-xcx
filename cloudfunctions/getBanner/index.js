@@ -1,3 +1,6 @@
+/**
+ * 定时获取首页 banner 图并存入云数据库中（也可以手动触发获取）
+ */
 // 云函数入口文件
 const cloud = require('wx-server-sdk');
 const {banner} = require('NeteaseCloudMusicApi');

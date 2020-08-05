@@ -1,3 +1,7 @@
+/**
+ * 模板消息推送云函数
+ */
+
 // 云函数入口文件
 const cloud = require('wx-server-sdk');
 // 注意：在云函数中不能去引用 cloudfunctions 目录外的文件

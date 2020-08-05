@@ -1,3 +1,6 @@
+/**
+ * 博客相关的云函数
+ */
 // 云函数入口文件
 const cloud = require('wx-server-sdk');
 // const path = require("path");
@@ -9,6 +12,8 @@ cloud.init({
     env: cloud.DYNAMIC_CURRENT_ENV
 });
 
+// 一个用户只能在一个环境中创建 50 个云函数，如果小程序很复杂的话，云函数就不够用了
+// 可以使用 云函数路由库 —— tcb-router
 const TcbRouter = require('tcb-router');
 
 const db = cloud.database();
