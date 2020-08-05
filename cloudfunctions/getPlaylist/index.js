@@ -1,7 +1,7 @@
 // 云函数入口文件
 const cloud = require('wx-server-sdk');
-const axios = require('axios');
-// const getDataByPagingQuery = require('../utils/paging-query');
+// const axios = require('axios');
+const {personalized,login_cellphone} = require('NeteaseCloudMusicApi');
 
 // env 设置只会决定小程序端 API 调用的云环境，并不会决定云函数中的 API 调用的环境，在云函数中需要通过 wx-server-sdk 的 init 方法重新设置环境
 // 每个云函数之间都是相互独立的，env 设置只会决定本次云函数 API 调用的云环境，并不会决定接下来其他被调云函数中的 API 调用的环境，在编写的每个云函数中都需要通过 init 方法重新设置环境。
@@ -12,14 +12,13 @@ cloud.init({
     env: cloud.DYNAMIC_CURRENT_ENV
 });
 
-const URL = 'http://localhost:4000/personalized';
-
 // 获取数据库的引用
 const db = cloud.database();
 // 获取播放列表集合的引用
 const playlistCollection = db.collection('playlist');
 // 最大查询数
 const MAX_LIMIT = 1000;
+
 
 /**
  * 插入播放列表数据
@@ -106,10 +105,25 @@ async function getPlaylistFromDatabase() {
 exports.main = async (event, context) => {
 
     let playlistFromDatabase = await getPlaylistFromDatabase();
-    // let playlistFromDatabase = await getDataByPagingQuery(playlistCollection, MAX_LIMIT);
 
-    const result = await axios.request(URL);
-    const playlistFromResult = result.data.result || [];
+    // 这里获取数据有两种调用方式：
+    // 一种是将 NeteaseCloudMusicApi 部署到自己的服务器，然后请求该服务的地址来获取 推荐歌单列表 数据
+    // const URL = 'http://musicapi.xiecheng.live';
+    // const result = await axios.request(URL + '/personalized');
+
+    // 一种是安装 NeteaseCloudMusicApi 包，使用这个包里的 api 去请求数据
+    // https://binaryify.github.io/NeteaseCloudMusicApi/#/?id=%e5%8f%af%e4%bb%a5%e5%9c%a8nodejs%e8%b0%83%e7%94%a8
+    const loginRes = await login_cellphone({
+        // 你注册网易云的手机号
+        phone:15700064959,
+        password:'qwer1234'
+    });
+    // console.log(loginRes);
+    const playlistRes = await personalized({
+        cookie:loginRes.body.cookie
+    });
+    // console.log(playlistRes);
+    const playlistFromResult = playlistRes.body.result || [];
 
     const playlist = removeRepeatAndMergeArr(playlistFromDatabase, playlistFromResult);
 

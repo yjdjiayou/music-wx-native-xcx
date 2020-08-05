@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "NeteaseCloudMusicApi": "^3.37.2",
     "axios": "^0.19.2",
     "wx-server-sdk": "latest"
   }
