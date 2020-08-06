@@ -23,7 +23,7 @@ const blogCommentCollection = db.collection('blog-comment');
 
 const MAX_LIMIT = 1000;
 
-async function getDataByPagingQuery(collection, maxLimit = 1000) {
+async function getDataByPagingQuery(collection,blogId, maxLimit = 1000) {
     // 默认情况下，获取到的数据是有限制的
     // 从云函数获取数据，只能获取到 1000 条数据
     // 从小程序端获取数据，只能获取到 20 条数据
@@ -38,7 +38,9 @@ async function getDataByPagingQuery(collection, maxLimit = 1000) {
     // 分成多次查询
     const tasks = [];
     for (let i = 0; i < batchTimes; i++) {
-        let promise = collection.skip(i * maxLimit).limit(maxLimit).get();
+        let promise = collection.skip(i * maxLimit).limit(maxLimit).where({
+            blogId
+        }).orderBy('createTime', 'desc').get();
         tasks.push(promise);
     }
 
@@ -98,7 +100,7 @@ exports.main = async (event, context) => {
         });
 
         // 获取评论列表
-        let commentListFromDatabase = await getDataByPagingQuery(blogCommentCollection, MAX_LIMIT);
+        let commentListFromDatabase = await getDataByPagingQuery(blogCommentCollection,blogId, MAX_LIMIT);
 
         ctx.body = {
             detail,
